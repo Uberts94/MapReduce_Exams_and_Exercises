@@ -39,11 +39,13 @@ implements Tool {
     
     Configuration conf = this.getConf();
 
+    conf.set("threshold", "50");
+    
     // Define a new job
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Es3-MapReduce Exercises");
+    job.setJobName("Es3");
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
