@@ -27,9 +27,6 @@ class MapperBigData extends Mapper<
             Text value,         // Input value type
             Context context) throws IOException, InterruptedException {
 
-            // Split each sentence in words. Use whitespace(s) as delimiter 
-    		// (=a space, a tab, a line break, or a form feed)
-    		// The split method returns an array of strings
             String[] sensorValues = value.toString().split("\\,");
             String[] datePoll = sensorValues[1].split("\t");
             

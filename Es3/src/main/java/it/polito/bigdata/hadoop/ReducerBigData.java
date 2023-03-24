@@ -2,6 +2,7 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -11,7 +12,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
-                IntWritable,    // Input value type
+                DoubleWritable,    // Input value type
                 Text,           // Output key type
                 IntWritable> {  // Output value type
     
@@ -19,15 +20,12 @@ class ReducerBigData extends Reducer<
     
     protected void reduce(
         Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        Iterable<DoubleWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
         int occurrences = 0;
 
-        // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
-        }
+        for (DoubleWritable value : values) occurrences +=1;
         
         context.write(key, new IntWritable(occurrences));
     }
