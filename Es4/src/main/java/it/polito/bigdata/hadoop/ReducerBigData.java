@@ -13,23 +13,21 @@ class ReducerBigData extends Reducer<
                 Text,    // Input value type
                 Text,           // Output key type
                 Text> {  // Output value type
-    
+	
     @Override
-    
     protected void reduce(
         Text key, // Input key type
         Iterable<Text> values, // Input value type
         Context context) throws IOException, InterruptedException {
     	
-    	String dates = "";
+    	String dates = null;
     	
     	for(Text value : values) {
-    		System.out.println(value.toString());
-    		dates.concat(value.toString());
-    	}
-    	
-    	System.out.println(dates);
-    	
-    	context.write(key, new Text(dates));
+    		if(dates == null) dates = new String(value.toString());
+    		else dates.concat(value.toString());
+    		
+    		System.out.println(dates.toString());
+    	}    	
+    	context.write(key, new Text(dates.toString()));
     }
 }
