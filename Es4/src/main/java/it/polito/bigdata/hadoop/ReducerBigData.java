@@ -24,9 +24,7 @@ class ReducerBigData extends Reducer<
     	
     	for(Text value : values) {
     		if(dates == null) dates = new String(value.toString());
-    		else dates.concat(value.toString());
-    		
-    		System.out.println(dates.toString());
+    		else dates = dates + "," + value.toString();
     	}    	
     	context.write(key, new Text(dates.toString()));
     }
