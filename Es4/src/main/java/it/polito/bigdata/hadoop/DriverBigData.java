@@ -37,7 +37,7 @@ implements Tool {
     
     Configuration conf = this.getConf();
 
-    conf.set("threshold", "40");
+    conf.set("threshold", "50");
     
     // Define a new job
     Job job = Job.getInstance(conf); 
