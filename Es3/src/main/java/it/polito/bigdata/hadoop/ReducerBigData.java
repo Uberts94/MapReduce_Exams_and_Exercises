@@ -25,7 +25,7 @@ class ReducerBigData extends Reducer<
 
         int occurrences = 0;
 
-        for (DoubleWritable value : values) occurrences +=1;
+        for (@SuppressWarnings("unused") DoubleWritable value : values) occurrences +=1;
         
         context.write(key, new IntWritable(occurrences));
     }
