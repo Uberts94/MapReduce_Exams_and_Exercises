@@ -1,4 +1,4 @@
-package it.polito.bigdata.hadoop.exercise5withcombiner;
+package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
