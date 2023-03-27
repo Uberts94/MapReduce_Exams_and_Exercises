@@ -23,7 +23,7 @@ public class LimitsWritable implements org.apache.hadoop.io.Writable {
 	public void setMin(float minValue) {
 		min = minValue;
 	}
-
+	
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		max = in.readFloat();

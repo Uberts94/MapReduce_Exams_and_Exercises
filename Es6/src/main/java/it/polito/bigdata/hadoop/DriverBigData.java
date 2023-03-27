@@ -66,19 +66,18 @@ implements Tool {
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(LimitsWritable.class);
     
-    // Set combiner class
-    job.setCombinerClass(CombinerBigData.class);
-    
     // Set reduce class
     job.setReducerClass(ReducerBigData.class);
         
     // Set reduce output key and value classes
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(LimitsWritable.class);
+    job.setOutputValueClass(Text.class);
 
     // Set number of reducers
     job.setNumReduceTasks(numberOfReducers);
     
+    // Set combiner class
+    job.setCombinerClass(CombinerBigData.class);
     
     // Execute the job and wait for completion
     if (job.waitForCompletion(true)==true)

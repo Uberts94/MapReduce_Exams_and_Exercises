@@ -2,7 +2,6 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -11,24 +10,27 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
-                IntWritable,    // Input value type
+                LimitsWritable,    // Input value type
                 Text,           // Output key type
-                IntWritable> {  // Output value type
+                Text> {  // Output value type
     
     @Override
     
     protected void reduce(
         Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        Iterable<LimitsWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        int occurrences = 0;
+        float global_max = Float.MIN_VALUE;
+        float global_min = Float.MAX_VALUE;
 
         // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
+        for (LimitsWritable value : values) {
+        	float local_min = value.getMin(), local_max = value.getMax();
+            if(local_min < global_min) global_min = local_min;
+            if(local_max > global_max) global_max = local_max;
         }
         
-        context.write(key, new IntWritable(occurrences));
+        context.write(key, new Text("Max "+global_max+" Min "+global_min));
     }
 }
