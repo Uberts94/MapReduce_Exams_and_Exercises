@@ -2,7 +2,7 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -11,24 +11,33 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
-                IntWritable,    // Input value type
-                Text,           // Output key type
-                IntWritable> {  // Output value type
+                PollutionWritable,    // Input value type
+                NullWritable,           // Output key type
+                PollutionWritable> {  // Output value type
     
     @Override
     
     protected void reduce(
         Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        Iterable<PollutionWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        int occurrences = 0;
-
+        float totalPoll = 0;
+        int numMeasurements = 0;
         // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
+        for (PollutionWritable measure : values) {
+            totalPoll += measure.getSum();
+            numMeasurements++;
         }
         
-        context.write(key, new IntWritable(occurrences));
+        System.out.println(key.toString()+" "+totalPoll+" "+numMeasurements);
+        
+        PollutionWritable sensor = new PollutionWritable();
+        
+        sensor.setSensor(key.toString());
+        sensor.setSum(totalPoll);
+        sensor.setAvg(numMeasurements);
+        
+        context.write(NullWritable.get(), sensor);
     }
 }
