@@ -4,7 +4,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -19,22 +19,23 @@ import org.apache.hadoop.util.ToolRunner;
  */
 public class DriverBigData extends Configured 
 implements Tool {
+	
+	public static enum COUNTERS {
+		RECORDS
+	}
 
   @Override
   public int run(String[] args) throws Exception {
 
     Path inputPath;
     Path outputDir;
-    int numberOfReducers;
 	int exitCode;  
 	
 	// Parse the parameters
-	// Number of instances of the reducer class 
-    numberOfReducers = Integer.parseInt(args[0]);
     // Folder containing the input data
-    inputPath = new Path(args[1]);
+    inputPath = new Path(args[0]);
     // Output folder
-    outputDir = new Path(args[2]);
+    outputDir = new Path(args[1]);
     
     Configuration conf = this.getConf();
 
@@ -64,23 +65,16 @@ implements Tool {
     job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
+    job.setMapOutputKeyClass(NullWritable.class);
+    job.setMapOutputValueClass(NullWritable.class);
     
-    // Set reduce class
-    job.setReducerClass(ReducerBigData.class);
-        
-    // Set reduce output key and value classes
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
-
-    // Set number of reducers
-    job.setNumReduceTasks(numberOfReducers);
-    
+    job.setNumReduceTasks(0);
     
     // Execute the job and wait for completion
-    if (job.waitForCompletion(true)==true)
+    if (job.waitForCompletion(true)==true) {
     	exitCode=0;
+    	System.out.println("Total number of records: "+job.getCounters().findCounter(COUNTERS.RECORDS).getValue());
+    }
     else
     	exitCode=1;
     	
