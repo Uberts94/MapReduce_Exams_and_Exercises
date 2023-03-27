@@ -3,7 +3,7 @@ package it.polito.bigdata.hadoop;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -25,24 +25,23 @@ implements Tool {
 
     Path inputPath;
     Path outputDir;
-    int numberOfReducers;
 	int exitCode;  
 	
 	// Parse the parameters
-	// Number of instances of the reducer class 
-    numberOfReducers = Integer.parseInt(args[0]);
     // Folder containing the input data
-    inputPath = new Path(args[1]);
+    inputPath = new Path(args[0]);
     // Output folder
-    outputDir = new Path(args[2]);
+    outputDir = new Path(args[1]);
     
     Configuration conf = this.getConf();
 
+    conf.set("threshold", args[2]);
+    
     // Define a new job
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Basic MapReduce Project - WordCount example");
+    job.setJobName("Es12");
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
@@ -64,18 +63,11 @@ implements Tool {
     job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
+    job.setMapOutputKeyClass(NullWritable.class);
+    job.setMapOutputValueClass(Text.class);
     
-    // Set reduce class
-    job.setReducerClass(ReducerBigData.class);
-        
-    // Set reduce output key and value classes
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
-
     // Set number of reducers
-    job.setNumReduceTasks(numberOfReducers);
+    job.setNumReduceTasks(0);
     
     
     // Execute the job and wait for completion
