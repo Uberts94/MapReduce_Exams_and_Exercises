@@ -7,17 +7,8 @@ import java.io.IOException;
 public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 	
 	//Month income
+	private String month = "";
 	private float totalInc = 0;
-	private int incCounter = 0;
-	private String year = "";
-
-	public String getYear() {
-		return year;
-	}
-	
-	public void setYear(String year) {
-		this.year = year;
-	}
 	
 	public float getInc() {
 		return totalInc;
@@ -27,28 +18,28 @@ public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 		totalInc = sumValue;
 	}
 
-	public int getCounter() {
-		return incCounter;
+	public String getMonth() {
+		return month;
 	}
 
-	public void setCounter(int counter) {
-		incCounter = counter;
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		totalInc = in.readFloat();
-		incCounter = in.readInt();
+		month = in.readUTF();
 	}
 
 	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeFloat(totalInc);
-		out.writeInt(incCounter);
+		out.writeUTF(month);
 	}
 
 	public String toString() {
-		String formattedString = new String("("+year+","+totalInc/incCounter+")");
+		String formattedString = new String(month+","+totalInc);
 
 		return formattedString;
 	}

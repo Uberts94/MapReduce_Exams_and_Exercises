@@ -26,9 +26,8 @@ class MapperBigData extends Mapper<
             String[] date = entry[0].split("\\-");
             
             MonthIncWritable income = new MonthIncWritable();
+            income.setMonth(date[1]);
             income.setInc(Float.parseFloat(entry[1]));
-            income.setCounter(1);
-            income.setYear(date[0]);
             
             context.write(new Text(date[0]+"-"+date[1]), income);
     }
