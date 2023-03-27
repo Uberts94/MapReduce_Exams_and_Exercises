@@ -1,6 +1,8 @@
 package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -9,32 +11,43 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 
 /**
- * Basic MapReduce Project - Mapper
+ * Es 9 mapping and combining data
  */
 class MapperBigData extends Mapper<
                     LongWritable, // Input key type
                     Text,         // Input value type
                     Text,         // Output key type
                     IntWritable> {// Output value type
+	
+	HashMap<String, Integer> map;
+	
+	protected void setup(Context context) {
+		map = new HashMap<String, Integer>();
+	}
     
     protected void map(
             LongWritable key,   // Input key type
             Text value,         // Input value type
             Context context) throws IOException, InterruptedException {
 
-            // Split each sentence in words. Use whitespace(s) as delimiter 
-    		// (=a space, a tab, a line break, or a form feed)
-    		// The split method returns an array of strings
             String[] words = value.toString().split("\\s+");
             
-            // Iterate over the set of words
             for(String word : words) {
-            	// Transform word case
-                String cleanedWord = word.toLowerCase();
-                
-                // emit the pair (word, 1)
-                context.write(new Text(cleanedWord),
-                		      new IntWritable(1));
+            	String cleanedword = word.toLowerCase();
+            	if(map.get(cleanedword) == null) {
+            		// inserting word for the first time
+            		map.put(cleanedword, 1);
+            	} else {
+            		// current word already mapped
+            		int occurrences = map.get(cleanedword);
+            		map.put(cleanedword, ++occurrences);
+            	}
             }
+    }
+    
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+    	for(Entry<String, Integer> word : map.entrySet()) {
+    		context.write(new Text(word.getKey()), new IntWritable(word.getValue()));
+    	}
     }
 }

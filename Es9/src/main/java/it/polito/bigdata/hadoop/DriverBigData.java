@@ -42,7 +42,7 @@ implements Tool {
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Basic MapReduce Project - WordCount example");
+    job.setJobName("Es9 - in_mapper combiner");
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
