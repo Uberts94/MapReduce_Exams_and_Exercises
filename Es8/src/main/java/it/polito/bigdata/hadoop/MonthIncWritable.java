@@ -9,7 +9,16 @@ public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 	//Month income
 	private float totalInc = 0;
 	private int incCounter = 0;
+	private String year = "";
 
+	public String getYear() {
+		return year;
+	}
+	
+	public void setYear(String year) {
+		this.year = year;
+	}
+	
 	public float getInc() {
 		return totalInc;
 	}
@@ -39,7 +48,7 @@ public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 	}
 
 	public String toString() {
-		String formattedString = new String("");
+		String formattedString = new String("("+year+","+totalInc/incCounter+")");
 
 		return formattedString;
 	}

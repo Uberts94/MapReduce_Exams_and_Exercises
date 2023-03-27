@@ -28,6 +28,7 @@ class MapperBigData extends Mapper<
             MonthIncWritable income = new MonthIncWritable();
             income.setInc(Float.parseFloat(entry[1]));
             income.setCounter(1);
+            income.setYear(date[0]);
             
             context.write(new Text(date[0]+"-"+date[1]), income);
     }

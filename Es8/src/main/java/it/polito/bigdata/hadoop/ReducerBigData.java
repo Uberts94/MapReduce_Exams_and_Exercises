@@ -2,7 +2,6 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -11,24 +10,32 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
-                IntWritable,    // Input value type
+                MonthIncWritable,    // Input value type
                 Text,           // Output key type
-                IntWritable> {  // Output value type
+                Text> {  // Output value type
     
     @Override
     
     protected void reduce(
         Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        Iterable<MonthIncWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        int occurrences = 0;
-
+        float global_monthInc = 0;
+        int counter = 0;
+        String[] entry = key.toString().split("\\-");
+        
         // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
+        for (MonthIncWritable value : values) {
+            global_monthInc += value.getInc();
+            counter += value.getCounter();
         }
         
-        context.write(key, new IntWritable(occurrences));
+        MonthIncWritable income = new MonthIncWritable();
+        income.setInc(global_monthInc);
+        income.setCounter(counter);
+        income.setYear(entry[0]);
+        
+        context.write(key, new Text(income.toString()));
     }
 }

@@ -21,6 +21,7 @@ class CombinerBigData extends
 		
 		float local_totIncome = 0;
 		int counter = 0;
+		String[] entry = key.toString().split("\\-");
 		
 		for(MonthIncWritable inc : values) {
 			local_totIncome += inc.getInc();
@@ -30,6 +31,7 @@ class CombinerBigData extends
 		MonthIncWritable localIncome = new MonthIncWritable();
 		localIncome.setInc(local_totIncome);
 		localIncome.setCounter(counter);
+		localIncome.setYear(entry[0]);
 		
 		context.write(key, localIncome);
 	}
