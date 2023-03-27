@@ -30,8 +30,6 @@ class ReducerBigData extends Reducer<
             numMeasurements++;
         }
         
-        System.out.println(key.toString()+" "+totalPoll+" "+numMeasurements);
-        
         PollutionWritable sensor = new PollutionWritable();
         
         sensor.setSensor(key.toString());
