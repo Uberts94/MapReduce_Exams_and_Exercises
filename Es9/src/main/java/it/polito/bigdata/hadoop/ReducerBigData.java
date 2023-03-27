@@ -24,7 +24,6 @@ class ReducerBigData extends Reducer<
 
         int occurrences = 0;
 
-        // Iterate over the set of values and sum them 
         for (IntWritable value : values) {
             occurrences = occurrences + value.get();
         }
