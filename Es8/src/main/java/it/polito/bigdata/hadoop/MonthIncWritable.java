@@ -8,7 +8,7 @@ public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 	
 	//Month income
 	private float totalInc = 0;
-	private String year = "";
+	private int incCounter = 0;
 
 	public float getInc() {
 		return totalInc;
@@ -18,24 +18,24 @@ public class MonthIncWritable implements org.apache.hadoop.io.Writable {
 		totalInc = sumValue;
 	}
 
-	public String getYear() {
-		return year;
+	public int getCounter() {
+		return incCounter;
 	}
 
-	public void setYear(String year) {
-		this.year = year;
+	public void setCounter(int counter) {
+		incCounter = counter;
 	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		totalInc = in.readFloat();
-		year = in.readUTF();
+		incCounter = in.readInt();
 	}
 
 	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeFloat(totalInc);
-		out.writeUTF(year);
+		out.writeInt(incCounter);
 	}
 
 	public String toString() {

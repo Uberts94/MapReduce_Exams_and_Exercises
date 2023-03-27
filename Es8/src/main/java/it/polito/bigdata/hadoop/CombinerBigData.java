@@ -19,5 +19,18 @@ class CombinerBigData extends
 			Iterable<MonthIncWritable> values, // Input value type
 			Context context) throws IOException, InterruptedException {
 		
+		float local_totIncome = 0;
+		int counter = 0;
+		
+		for(MonthIncWritable inc : values) {
+			local_totIncome += inc.getInc();
+			counter++;
+		}
+		
+		MonthIncWritable localIncome = new MonthIncWritable();
+		localIncome.setInc(local_totIncome);
+		localIncome.setCounter(counter);
+		
+		context.write(key, localIncome);
 	}
 }
