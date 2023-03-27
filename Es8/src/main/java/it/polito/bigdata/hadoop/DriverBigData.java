@@ -42,7 +42,7 @@ implements Tool {
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Es8");
+    job.setJobName("Es8 - part 1");
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
@@ -79,8 +79,57 @@ implements Tool {
     
     
     // Execute the job and wait for completion
-    if (job.waitForCompletion(true)==true)
-    	exitCode=0;
+    if (job.waitForCompletion(true)==true) {
+    	// Parse the parameters
+    	// Number of instances of the reducer class 
+        numberOfReducers = Integer.parseInt(args[0]);
+        // Folder containing the input data
+        Path inputPath1 = outputDir;
+        // Output folder
+        Path outputDir1 = new Path(args[3]);
+
+        // Define a new job
+        Job job2 = Job.getInstance(conf); 
+
+        // Assign a name to the job
+        job2.setJobName("Es8 - part 2");
+        
+        // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
+        FileInputFormat.addInputPath(job2, inputPath1);
+        
+        // Set path of the output folder for this job
+        FileOutputFormat.setOutputPath(job2, outputDir1);
+        
+        // Specify the class of the Driver for this job
+        job2.setJarByClass(DriverBigData.class);
+        
+        // Set job input format
+        job2.setInputFormatClass(TextInputFormat.class);
+
+        // Set job output format
+        job2.setOutputFormatClass(TextOutputFormat.class);
+           
+        // Set map class
+        job2.setMapperClass(MapperBigData1.class);
+        
+        // Set map output key and value classes
+        job2.setMapOutputKeyClass(Text.class);
+        job2.setMapOutputValueClass(MonthIncWritable.class);
+        
+        // Set reduce class
+        job2.setReducerClass(ReducerBigData1.class);
+            
+        // Set reduce output key and value classes
+        job2.setOutputKeyClass(Text.class);
+        job2.setOutputValueClass(NullWritable.class);
+
+        // Set number of reducers
+        job2.setNumReduceTasks(1);
+        
+        if(job2.waitForCompletion(true)==true) {
+        	exitCode=0;
+        } else exitCode=1;
+    }
     else
     	exitCode=1;
     	

@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 /**
  * Es8 - reducer
  */
-class ReducerBigData extends Reducer<
+class ReducerBigData1 extends Reducer<
                 Text,           // Input key type
                 MonthIncWritable,    // Input value type
                 Text,           // Output key type
@@ -21,15 +21,15 @@ class ReducerBigData extends Reducer<
         Iterable<MonthIncWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        float global_monthInc = 0;
-        String[] entry = key.toString().split("\\-");
+        float totalYearInc = 0;
+        int counter = 0;
         
-        for (MonthIncWritable value : values) {
-            global_monthInc += value.getInc();
+        for(MonthIncWritable inc : values) {
+        	totalYearInc += inc.getInc();
+        	counter++;
+        	context.write(new Text("("+key.toString()+"-"+inc.toString()+")"), NullWritable.get());
         }
-        MonthIncWritable inc = new MonthIncWritable();
-        inc.setMonth(entry[1]);
-        inc.setInc(global_monthInc);
-        context.write(new Text(entry[0]+"-"+inc.toString()), NullWritable.get());
+        
+        context.write(new Text("("+key.toString()+","+totalYearInc/counter+")"), NullWritable.get());
     }
 }
