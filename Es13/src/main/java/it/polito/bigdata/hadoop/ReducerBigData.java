@@ -2,33 +2,38 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Basic MapReduce Project - Reducer
+ * Es13 
  */
 class ReducerBigData extends Reducer<
-                Text,           // Input key type
-                IntWritable,    // Input value type
-                Text,           // Output key type
-                IntWritable> {  // Output value type
+                NullWritable,           // Input key type
+                IncomeWritable,    // Input value type
+                NullWritable,           // Output key type
+                Text> {  // Output value type
     
-    @Override
-    
+	@Override
     protected void reduce(
-        Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        NullWritable key, // Input key type
+        Iterable<IncomeWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        int occurrences = 0;
-
-        // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
+        IncomeWritable globalMax = new IncomeWritable();
+        globalMax.setIncome(Float.MIN_VALUE);
+        
+        for(IncomeWritable income : values) {
+        	float localIncome = income.getIncome();
+        	String localDate = income.getDate();
+        	if(localIncome > globalMax.getIncome()) {
+        		globalMax.setDate(localDate);
+        		globalMax.setIncome(localIncome);
+        	}
         }
         
-        context.write(key, new IntWritable(occurrences));
+        context.write(NullWritable.get(), new Text(globalMax.toString()));
     }
 }
