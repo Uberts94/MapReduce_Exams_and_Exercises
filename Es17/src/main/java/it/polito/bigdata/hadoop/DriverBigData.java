@@ -3,6 +3,7 @@ package it.polito.bigdata.hadoop;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -33,7 +34,7 @@ implements Tool {
     numberOfReducers = Integer.parseInt(args[0]);
     // Folder containing the input data
     inputPath1 = new Path(args[1]);
- // Folder containing the input data
+    // Folder containing the input data
     inputPath2 = new Path(args[2]);
     // Output folder
     outputDir = new Path(args[3]);
@@ -56,33 +57,19 @@ implements Tool {
     
     // Specify the class of the Driver for this job
     job.setJarByClass(DriverBigData.class);
-    
-    
-    // Set job input format
-    job.setInputFormatClass(TextInputFormat.class);
 
     // Set job output format
     job.setOutputFormatClass(TextOutputFormat.class);
+    
+    // Set map output key and value classes
+    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputValueClass(TemperatureWritable.class);
        
-    // Set map class
-    job.setMapperClass(MapperBigData.class);
-    
-    // Set map output key and value classes
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(TemperatureWritable.class);
-    
-    // Set map class
-    job.setMapperClass(MapperBigData1.class);
-    
-    // Set map output key and value classes
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(TemperatureWritable.class);
-    
     // Set reduce class
     job.setReducerClass(ReducerBigData.class);
         
     // Set reduce output key and value classes
-    job.setOutputKeyClass(Text.class);
+    job.setOutputKeyClass(NullWritable.class);
     job.setOutputValueClass(Text.class);
 
     // Set number of reducers

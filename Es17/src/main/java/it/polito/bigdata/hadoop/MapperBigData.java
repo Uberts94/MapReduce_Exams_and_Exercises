@@ -6,7 +6,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-
 /**
  * Es17 - mapping data of first file
  */
@@ -21,11 +20,14 @@ class MapperBigData extends Mapper<
             Text value,         // Input value type
             Context context) throws IOException, InterruptedException {
 
-            String[] measurement = value.toString().split("\\,");
+            String[] measurement = value.toString().split(",");
             
             TemperatureWritable t = new TemperatureWritable();
             t.setSensorId(measurement[0]);
             t.setTemperature(Float.parseFloat(measurement[3]));
+            t.setDate(measurement[1]);
+            
+            System.out.println(t.toString());
             
             context.write(new Text(measurement[1]), t);
     }

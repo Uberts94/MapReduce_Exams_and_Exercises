@@ -21,5 +21,18 @@ class ReducerBigData extends Reducer<
         Iterable<TemperatureWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
+    	float maxTemperature = Float.MIN_VALUE;
+    	
+    	for(TemperatureWritable measurement : values) {
+    		float localTemp = measurement.getTemperature();
+    		if(maxTemperature < localTemp)
+    			maxTemperature = localTemp;
+    	}
+    	
+    	TemperatureWritable maxMeasure = new TemperatureWritable();
+    	maxMeasure.setDate(key.toString());
+    	maxMeasure.setTemperature(maxTemperature);
+    	
+    	context.write(NullWritable.get(), new Text(maxMeasure.toString()));
     }
 }

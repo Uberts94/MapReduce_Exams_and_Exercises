@@ -20,11 +20,14 @@ class MapperBigData1 extends Mapper<
             Text value,         // Input value type
             Context context) throws IOException, InterruptedException {
 
-            String[] measurement = value.toString().split("\\,");
+            String[] measurement = value.toString().split(",");
             
             TemperatureWritable t = new TemperatureWritable();
             t.setSensorId(measurement[3]);
             t.setTemperature(Float.parseFloat(measurement[2]));
+            t.setDate(measurement[0]);
+            
+            System.out.println(t.toString());
             
             context.write(new Text(measurement[0]), t);
     }
