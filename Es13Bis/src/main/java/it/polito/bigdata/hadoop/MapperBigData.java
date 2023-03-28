@@ -1,40 +1,57 @@
 package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 
 /**
- * Basic MapReduce Project - Mapper
+ * Es13Bis - mapping data
  */
 class MapperBigData extends Mapper<
                     LongWritable, // Input key type
                     Text,         // Input value type
-                    Text,         // Output key type
-                    IntWritable> {// Output value type
+                    NullWritable,         // Output key type
+                    IncomeWritable> {// Output value type
+	
+	ArrayList<IncomeWritable> m;
+	
+	protected void setup(Context context) {
+		m = new ArrayList<IncomeWritable>();
+		IncomeWritable income = new IncomeWritable();
+		income.setDate("");
+		income.setIncome(Float.MIN_VALUE);
+		m.add(0, income);
+		m.add(0, income);
+	}
     
     protected void map(
             LongWritable key,   // Input key type
             Text value,         // Input value type
             Context context) throws IOException, InterruptedException {
 
-            // Split each sentence in words. Use whitespace(s) as delimiter 
-    		// (=a space, a tab, a line break, or a form feed)
-    		// The split method returns an array of strings
-            String[] words = value.toString().split("\\s+");
+            String[] income = value.toString().split("\\t+");
+            float localIncome = Float.parseFloat(income[1]);
             
-            // Iterate over the set of words
-            for(String word : words) {
-            	// Transform word case
-                String cleanedWord = word.toLowerCase();
-                
-                // emit the pair (word, 1)
-                context.write(new Text(cleanedWord),
-                		      new IntWritable(1));
+            for(int i = 0; i < 2; i++) {
+            	if(localIncome > m.get(i).getIncome()) {
+            		IncomeWritable inc = new IncomeWritable();
+            		inc.setDate(income[0]);
+            		inc.setIncome(localIncome);
+            		m.add(i, inc);
+            		m.remove(2);
+            		break;
+            	}
             }
+    }
+    
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+    	for(int i = 0; i < 2; i++) {
+    		context.write(NullWritable.get(), m.get(i));
+    	}
     }
 }

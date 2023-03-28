@@ -8,7 +8,7 @@ import java.io.IOException;
 public class IncomeWritable implements org.apache.hadoop.io.Writable {
 	private float income = 0;
 	private String date;
-
+	
 	public float getIncome() {
 		return income;
 	}
