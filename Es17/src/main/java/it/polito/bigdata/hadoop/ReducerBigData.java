@@ -2,33 +2,24 @@ package it.polito.bigdata.hadoop;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Basic MapReduce Project - Reducer
+ * Es17 - reducer
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
-                IntWritable,    // Input value type
-                Text,           // Output key type
-                IntWritable> {  // Output value type
-    
+                TemperatureWritable,    // Input value type
+                NullWritable,           // Output key type
+                Text> {  // Output value type
+	
     @Override
-    
     protected void reduce(
         Text key, // Input key type
-        Iterable<IntWritable> values, // Input value type
+        Iterable<TemperatureWritable> values, // Input value type
         Context context) throws IOException, InterruptedException {
 
-        int occurrences = 0;
-
-        // Iterate over the set of values and sum them 
-        for (IntWritable value : values) {
-            occurrences = occurrences + value.get();
-        }
-        
-        context.write(key, new IntWritable(occurrences));
     }
 }

@@ -24,9 +24,9 @@ class MapperBigData extends Mapper<
             String[] measurement = value.toString().split("\\,");
             
             TemperatureWritable t = new TemperatureWritable();
-            t.setDate(measurement[1]);
+            t.setSensorId(measurement[0]);
             t.setTemperature(Float.parseFloat(measurement[3]));
             
-            context.write(new Text(measurement[0]), t);
+            context.write(new Text(measurement[1]), t);
     }
 }
