@@ -64,8 +64,8 @@ implements Tool {
     job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
-    job.setMapOutputKeyClass(NullWritable.class);
-    job.setMapOutputValueClass(WordWritable.class);
+    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputValueClass(NullWritable.class);
     
     // Set reduce class
     job.setReducerClass(ReducerBigData.class);
