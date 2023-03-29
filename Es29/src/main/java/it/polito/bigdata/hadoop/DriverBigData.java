@@ -58,9 +58,6 @@ implements Tool {
 
     // Set job output format
     job.setOutputFormatClass(TextOutputFormat.class);
-       
-    // Set map class
-    job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
     job.setMapOutputKeyClass(Text.class);
