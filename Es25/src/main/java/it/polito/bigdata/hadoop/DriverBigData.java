@@ -39,15 +39,12 @@ implements Tool {
     Path outputDir2 = new Path(args[3]);
     
     Configuration conf = this.getConf();
-
-    // Setting username parameter
-    conf.set("username", args[4]);
     
     // Define a new job
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Es25 - finding friends of "+args[4]);
+    job.setJobName("Es25 - finding friends");
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
@@ -68,7 +65,7 @@ implements Tool {
     job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
-    job.setMapOutputKeyClass(NullWritable.class);
+    job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(Text.class);
     
     // Set reduce class
@@ -92,7 +89,7 @@ implements Tool {
         job2.addCacheFile(new Path(outputDir+"/part-r-00000").toUri());
 
         // Assign a name to the job
-        job2.setJobName("Es25 - finding potential friends of "+args[4]);
+        job2.setJobName("Es25 - finding potential friends");
         
         // Set path of the output folder for this job
         FileInputFormat.addInputPath(job2, inputPath);

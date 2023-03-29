@@ -7,7 +7,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Basic MapReduce Project - Reducer
+ * Es25 - reducer
  */
 class ReducerBigData extends Reducer<
                 Text,           // Input key type
