@@ -21,10 +21,6 @@ class ReducerBigData extends Reducer<
         Iterable<Text> values, // Input value type
         Context context) throws IOException, InterruptedException {
     	
-    	String friends = new String();
-    	
-    	for(Text friend : values) friends += friend.toString()+" ";
-        
-        context.write(NullWritable.get(), new Text(friends));
+    	for(Text friend : values) context.write(NullWritable.get(), friend);
     }
 }
