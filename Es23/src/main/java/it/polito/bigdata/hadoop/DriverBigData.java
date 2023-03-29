@@ -3,7 +3,7 @@ package it.polito.bigdata.hadoop;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -38,11 +38,14 @@ implements Tool {
     
     Configuration conf = this.getConf();
 
+    // Setting username parameter
+    conf.set("username", args[3]);
+    
     // Define a new job
     Job job = Job.getInstance(conf); 
 
     // Assign a name to the job
-    job.setJobName("Es23");
+    job.setJobName("Es23 - finding friends of "+args[3]);
     
     // Set path of the input file/folder (if it is a folder, the job reads all the files in the specified folder) for this job
     FileInputFormat.addInputPath(job, inputPath);
@@ -64,15 +67,15 @@ implements Tool {
     job.setMapperClass(MapperBigData.class);
     
     // Set map output key and value classes
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
+    job.setMapOutputKeyClass(NullWritable.class);
+    job.setMapOutputValueClass(Text.class);
     
     // Set reduce class
     job.setReducerClass(ReducerBigData.class);
         
     // Set reduce output key and value classes
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
+    job.setOutputKeyClass(NullWritable.class);
+    job.setOutputValueClass(Text.class);
 
     // Set number of reducers
     job.setNumReduceTasks(numberOfReducers);
