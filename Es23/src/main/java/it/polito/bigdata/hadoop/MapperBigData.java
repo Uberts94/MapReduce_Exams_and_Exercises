@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 
 /**
- * Es22 - mapping data
+ * Es23 - mapping data
  */
 class MapperBigData extends Mapper<
                     LongWritable, // Input key type
